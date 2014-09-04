@@ -80,7 +80,19 @@ app.use('/preview',express.static(require('path').join(__dirname, '/../dest')));
           //转换成parsedJson
           var pj = exec ('gulp data --city '+cityNameP,
           function (error, stdout, stderr) {
-              res.status(200).send({status:'ok'});
+
+              //运行完gulp，生成了parsed.json
+              
+              var jsonString = fs.readFileSync('../data/'+cityNameP+'/parsed.json', {encoding :'utf8'});
+              var names = JSON.parse(jsonString);
+              var siteNames=[];
+              for(key in names){
+                siteNames.push(key);
+              }
+              
+
+
+              res.status(200).send({status:'ok',siteNames:siteNames});
           });
       });
     });
