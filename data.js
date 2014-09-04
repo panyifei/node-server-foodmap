@@ -67,13 +67,9 @@ function santitize(data){
 exports.get = function(cityNameP){
   var filename = '../data/'+cityNameP+'/origin.csv';
   var parsedFilePath = "../data/" + cityNameP + "/parsed.json";
-  var exists = fs.existsSync(parsedFilePath);
   var deferred = q.defer();
   var content;
-  if(exists){
-    content = fs.readFileSync(parsedFilePath);
-    deferred.resolve(santitize(JSON.parse(content)));
-  }else{
+
     content = fs.readFileSync(filename).toString();
     if(data){
       deferred.resolve(santitize(data));
@@ -91,5 +87,4 @@ exports.get = function(cityNameP){
       });
       csvConverter.fromString(content,function(err,data){});
     }
-  }
 }

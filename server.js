@@ -5,13 +5,16 @@ var fs = require('fs-extra')
 var parser = require('./data');
 var exec  = require('child_process').exec;
 var archiver = require('archiver');
-
+var url = require('url');
 var app = express();
 
 
 app.use('/', express.static(__dirname + '/static'));
-
 app.use(bodyParser.urlencoded({ extended: false }));
+
+
+// //预览
+app.use('/preview',express.static(require('path').join(__dirname, '/../dest')));
 
     //第一步，添加meta
     app.use('/addmeta',function(req, res){
@@ -22,17 +25,28 @@ app.use(bodyParser.urlencoded({ extended: false }));
         var cityNameP = cityNameArr[1];
         var title = req.body.title;
         var pdfLink = req.body.pdfLink;
+        //下面3个可选
         var thumbnail = req.body.thumbnail;
+        var shareDesc = req.body.shareDesc;
         var priceConvert = req.body.priceConvert;
         var data = "module.exports = {\n"+
           "'cityId':"+cityId+",\n"+
           "'cityName':'"+cityName+"',\n"+
           "'title':'"+title+"',\n"+
-          "'pdf':'"+pdfLink+"',\n"+
-          "'thumbnail':'"+thumbnail+"',\n"+
-          "'priceConvert': function(price){ return "+priceConvert+"\n}}";
-        //console.log(cityNameP);
-        //console.log(data);
+          "'pdf':'"+pdfLink+"',\n";
+          if(thumbnail !== ""){
+            data = data +"'thumbnail':'" +  thumbnail  + "',\n";
+          }
+          if(shareDesc !== ''){
+            data = data + "'shareDesc':'" + shareDesc + "',\n";
+          }
+          if(priceConvert !== ''){
+            data = data +  "'priceConvert': function(price){ return " + priceConvert + "}\n}";
+          }else{
+            data = data + '}';
+          }
+          
+
         fs.mkdir('../data/'+cityNameP,function(err){
             if (err) {};//出错代表有文件了，直接改写
             fs.writeFile('../data/'+cityNameP+'/meta.js', data , function (err) {
@@ -61,10 +75,14 @@ app.use(bodyParser.urlencoded({ extended: false }));
       //转文件到城市下
       fs.renameSync('./uploads/origin.csv', '../data/'+cityNameP+'/origin.csv');
 
-      //转换成parsedJson
-      parser.get(cityNameP);
-
-      res.status(200).send({status:'ok'});
+      fs.remove('../data/'+cityNameP+'/parsed.json', function(err){
+          if (err) {}
+          //转换成parsedJson
+          var pj = exec ('gulp data --city '+cityNameP,
+          function (error, stdout, stderr) {
+              res.status(200).send({status:'ok'});
+          });
+      });
     });
 
 
@@ -116,7 +134,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
       var cityname = req.body.cityname;
       var cityNameP = cityname.split(";")[1];
       //新建城市文件夹,再转文件到城市下
-      fs.mkdir('../pics/'+cityNameP,function(err){
+      fs.remove('../pics/'+cityNameP, function(err){
+        if (err) {}
+        fs.mkdir('../pics/'+cityNameP,function(err){
             if (err) {};//出错代表有文件了，直接改写
             //移动文件夹
             fs.move('./uploads/pictures', '../pics/'+cityNameP,function(){
@@ -124,8 +144,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
                 fs.mkdirSync('./uploads/pictures/map');
                 res.status(200).send({status:'ok'});
             });
-
+        });
       });
+
     });
 
 
@@ -136,31 +157,32 @@ app.use(bodyParser.urlencoded({ extended: false }));
       //调用gulp
       var gu = exec ('gulp --city '+cityNameP,
         function (error, stdout, stderr) {
-           console.log('stdout: ' + stdout);
-
-           if (error !== null) {
+          console.log('stdout: ' + stdout);
+          if (error !== null) {
           console.log('exec error: ' + error);}
 
-            var output = fs.createWriteStream('target.zip');
-            var archive = archiver('zip');
+          fs.remove('./static/target.zip', function(err){
+            if (err) {}
+                var output = fs.createWriteStream('./static/target.zip');
+                var archive = archiver('zip');
 
-            output.on('close', function () {
-                console.log(archive.pointer() + ' total bytes');
-                console.log('archiver has been finalized and the output file descriptor has closed.');
-            });
+                output.on('close', function () {
+                    console.log(archive.pointer() + ' total bytes');
+                    console.log('archiver has been finalized and the output file descriptor has closed.');
+                });
 
-            archive.on('error', function(err){
-                throw err;
-            });
+                archive.on('error', function(err){
+                    throw err;
+                });
 
-            archive.pipe(output);
-            archive.bulk([
-                { expand: true, cwd: '../dest/'+cityNameP, src: ['**/*'], dest: './static/'+cityNameP}
-            ]);
-            archive.finalize();
+                archive.pipe(output);
+                archive.bulk([
+                    { expand: true, cwd: '../dest/'+cityNameP, src: ['**/*'], dest: './'+cityNameP}
+                ]);
+                archive.finalize();
 
-            res.status(200).send({status:'ok',url:"http://127.0.0.1:3000/target.zip"});
-
+                res.status(200).send({status:'ok',url:"./target.zip",showurl:"../preview/"+cityNameP+'/foodmap'});
+          });
        });
 
 

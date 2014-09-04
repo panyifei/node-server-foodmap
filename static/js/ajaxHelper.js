@@ -16,6 +16,7 @@ $(document).ready(function(){
                      title:$("input[name='title']").val(),
                      pdfLink:$("input[name='pdfLink']").val(),
                      thumbnail:$("input[name='thumbnail']").val(),
+                     shareDesc:$("input[name='shareDesc']").val(),
                      priceConvert:$("input[name='priceConvert']").val()
                         }, 
                  success: function(data){
@@ -100,7 +101,7 @@ $(document).ready(function(){
                         if(data.status==='ok'){
                              console.log('所有图片上传成功');
                              changeToNextState($('#uploadPicDiv'),$('#uploadPicCollapse'),$('#finalBuildCollapse'));
-
+                             $('#mapBuildStatus').text('地图正在生成中...');
                              //发送一个最后的build请求
                              $.ajax({
                              type:'POST',
@@ -111,8 +112,11 @@ $(document).ready(function(){
                              success: function(data){
                                 if(data.status==='ok'){
                                      console.log('build成功');
+                                     $('#mapBuildStatus').text('地图生成完毕');
                                      $('#downloadFoodmapBtn').removeAttr('disabled');
                                      $('#downloadFoodmapBtn').attr('data-url',data.url);
+                                     $('#showFoodmapA').removeAttr('disabled');
+                                     $('#showFoodmapA').attr('href',data.showurl);
                                 }
                             }});
                         }
@@ -122,6 +126,7 @@ $(document).ready(function(){
 
     $('#downloadFoodmapBtn').click(function(){
         location.href=$('#downloadFoodmapBtn').attr('data-url');
+        changeToNextState($('#finalBuildDiv'),$('#finalBuildCollapse'),null);
     });
     
 
@@ -129,6 +134,7 @@ $(document).ready(function(){
     function changeToNextState(thisDiv,thisCo,nextCo){
         thisDiv.removeClass('bs-callout-danger').addClass('bs-callout-info');
         thisCo.collapse('hide');
+        if(nextCo !== null)
         nextCo.collapse('show');
     }
 
