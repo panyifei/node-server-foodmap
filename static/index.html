@@ -47,6 +47,11 @@
                     <input type="text" class="form-control" name="pdfLink" placeholder="pdf链接">
                     <p class="help-block">Example :'  http://www.dianping.com/taipei/foodmap/taipei_foodmap.pdf  '</p>
                   </div>
+                  <div class="form-group">
+                    <label for="exampleInputFile">输入thumbnail</label>
+                    <input type="text" class="form-control" name="thumbnail" placeholder="thumbnail">
+                    <p class="help-block">Example :'  http://j3.s2.dpfile.com/pc/014255c44e4c1fc296217d76c1043aea(120c120)/thumb.jpg  '</p>
+                  </div>
 
 
                   <div id="addMetaChooseDiv" class="panel panel-default bs-callout-info bs-callout">
@@ -59,11 +64,6 @@
 
                         <div id="addMetaChooseCollapse" class="panel-collapse collapse">
                             <hr/>
-                            <div class="form-group">
-                              <label for="exampleInputFile">输入thumbnail</label>
-                              <input type="text" class="form-control" name="thumbnail" placeholder="thumbnail">
-                              <p class="help-block">Example :'  http://j3.s2.dpfile.com/pc/014255c44e4c1fc296217d76c1043aea(120c120)/thumb.jpg  '</p>
-                            </div>
                             <div class="form-group">
                               <label for="exampleInputFile">输入shareDesc</label>
                               <input type="text" class="form-control" name="shareDesc" placeholder="shareDesc">
@@ -100,6 +100,7 @@
                   <div id="csvBox">景点信息(CSV文件)</div>
                   <input id="csvMultiple" type="file" multiple>
                 </form>
+                <h4 id="showCsvStatus"></h4>
             </div>
       </div>
 
@@ -118,16 +119,23 @@
                 <form role="form" action="" method="post" class="nosubmitform">
                   <div id="bannerBox">Banner图片</div>
                   <input id="bannerMultiple" type="file" multiple>
+                  <div id="previewBannerDiv"></div>
                 </form>
+                <hr/>
+                <h4 id="showSiteNames"></h4>
                 <hr/>
                 <form role="form" action="" method="post" class="nosubmitform">
                   <div id="picturesBox">商家图片(拖拽即可)</div>
                   <input id="picturesMultiple" type="file" multiple>
+                  <button id="rePicturesUpload" class="btn btn-default">重传pictures和map</button>
+                  <div id="previewPicturesDiv"></div>
                 </form>
                 <hr/>
                 <form role="form" action="" method="post" class="nosubmitform">
                   <div id="mapPicBox">map图片(拖拽即可)</div>
                   <input id="mapPicMultiple" type="file" multiple>
+                  <button id="reMapPicUpload" class="btn btn-default">重新上传map</button>
+                  <div id="previewMapDiv"></div>
                 </form>
                 <hr/>
                 <button id="uploadPicDoneBtn" class="btn btn-default">上传完毕</button>

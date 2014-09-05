@@ -131,6 +131,22 @@ app.use('/preview',express.static(require('path').join(__dirname, '/../dest')));
       res.status(200).send({status:'ok'});
     });
 
+    //删去商家图片包
+    app.use('/rePicturesUpload',function(req, res){
+      //新建城市文件夹,再转文件到城市下
+      fs.remove('./uploads/pictures', function(err){
+        if (err) {}
+        fs.mkdir('./uploads/pictures',function(err){
+            if (err) {};//出错代表有文件了，直接改写
+            fs.mkdir('./uploads/pictures/map',function(err){
+            if (err) {};//出错代表有文件了，直接改写
+            res.status(200).send({status:'ok'});
+            });
+        });
+      });
+
+    });
+
     //上传地图包
     app.use('/uploadMapPic',multer({ 
       dest: './uploads/pictures/map',
@@ -139,6 +155,19 @@ app.use('/preview',express.static(require('path').join(__dirname, '/../dest')));
       },
     }),function(req, res){
       res.status(200).send({status:'ok'});
+    });
+
+    //删去map图片包
+    app.use('/reMapPicUpload',function(req, res){
+      //新建城市文件夹,再转文件到城市下
+      fs.remove('./uploads/pictures/map', function(err){
+        if (err) {}
+        fs.mkdir('./uploads/pictures/map',function(err){
+            if (err) {};//出错代表有文件了，直接改写
+            res.status(200).send({status:'ok'});
+        });
+      });
+
     });
 
     //上传地图包

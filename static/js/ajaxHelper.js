@@ -1,6 +1,6 @@
 $(document).ready(function(){
 
-    
+    var siteNames=[];
 
     //阻止表单默认
     $(".nosubmitform").on("submit",function(e){
@@ -32,6 +32,7 @@ $(document).ready(function(){
             name: "csv",
             postUrl: "./uploadCsv" ,
             onSuccess:function(){
+                $('#showCsvStatus').text('生成数据中...');
                 console.log('上传成功');
                 $.ajax({
                  type:"POST",
@@ -42,6 +43,13 @@ $(document).ready(function(){
                  success: function(data){
                     if(data.status==='ok'){
                          console.log('parsedJson生成成功');
+                         $('#showCsvStatus').text('数据生成成功');
+                         var str = '';
+                         data.siteNames.forEach(function(value,index,array){
+                             str = str + value + ";";
+                         });
+                         siteNames=data.siteNames;
+                         $('#showSiteNames').text(str);
                          changeToNextState($('#uploadCsvDiv'),$('#uploadCsvCollapse'),$('#uploadPicCollapse'));
                     }
                 }});
@@ -52,6 +60,18 @@ $(document).ready(function(){
     $("#bannerBox, #bannerMultiple").html5Uploader({
             name: "banner",
             postUrl: "./uploadBanner" ,
+            onClientLoad:function(e, file ,imgUrl){
+                var img = document.createElement('img');
+                var span = document.createElement('span');
+                $(img).css('width','150px');
+                $(span).text(file.name);
+                img.src = imgUrl;
+                var newdiv = document.createElement('div');
+                newdiv.appendChild(img);
+                newdiv.appendChild(span);
+                $("#previewBannerDiv").empty();
+                document.getElementById("previewBannerDiv").appendChild(newdiv);
+            },
             onSuccess:function(){
                 console.log('上传Banner成功');
                 $.ajax({
@@ -74,18 +94,80 @@ $(document).ready(function(){
     $("#picturesBox, #picturesMultiple").html5Uploader({
             name: "pictures",
             postUrl: "./uploadPictures" ,
+            onClientLoad:function(e, file ,imgUrl){
+                var img = document.createElement('img');
+                var span = document.createElement('span');
+                $(img).css('width','150px');
+                $(span).text(file.name);
+                var ifExist = siteNames.some(function(value,index,array){
+                    value+='.jpg';
+                    return value === file.name;
+                });
+                if(!ifExist){
+                    $(span).css('color','red');
+                }
+                img.src = imgUrl;
+                var newdiv = document.createElement('div');
+                newdiv.appendChild(img);
+                newdiv.appendChild(span);
+                document.getElementById("previewPicturesDiv").appendChild(newdiv);
+            },
             onSuccess:function(){
                 console.log('上传pictures成功');
             }
     });
 
+    $('#rePicturesUpload').click(function(){
+        $.ajax({
+                 type:"GET",
+                 url: "./rePicturesUpload", 
+                 success: function(data){
+                    if(data.status==='ok'){
+                         console.log('删去已上传商家图片');
+                         $('#previewPicturesDiv').empty();
+                         $('#previewMapDiv').empty();
+                    }
+        }});
+    });
+
+
     //上传map图片
     $('#mapPicBox, #mapPicMultiple').html5Uploader({
             name: "mapPic",
             postUrl: "./uploadMapPic" ,
+            onClientLoad:function(e, file ,imgUrl){
+                var img = document.createElement('img');
+                var span = document.createElement('span');
+                $(img).css('width','150px');
+                $(span).text(file.name);
+                var ifExist = siteNames.some(function(value,index,array){
+                    value+='.jpg';
+                    return value === file.name;
+                });
+                if(!ifExist){
+                    $(span).css('color','red');
+                }
+                img.src = imgUrl;
+                var newdiv = document.createElement('div');
+                newdiv.appendChild(img);
+                newdiv.appendChild(span);
+                document.getElementById("previewMapDiv").appendChild(newdiv);
+            },
             onSuccess:function(){
                 console.log('上传map图片成功');
             }
+    });
+
+    $('#reMapPicUpload').click(function(){
+        $.ajax({
+                 type:"GET",
+                 url: "./reMapPicUpload", 
+                 success: function(data){
+                    if(data.status==='ok'){
+                         console.log('删去已上传图片');
+                         $('#previewMapDiv').empty();
+                    }
+        }});
     });
 
 
