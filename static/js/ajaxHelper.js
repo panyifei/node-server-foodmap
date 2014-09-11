@@ -124,6 +124,7 @@ $(document).ready(function(){
                  success: function(data){
                     if(data.status==='ok'){
                          console.log('删去已上传商家图片');
+                         //$('#picturesMultiple')[0].files=[];
                          $('#previewPicturesDiv').empty();
                          $('#previewMapDiv').empty();
                     }

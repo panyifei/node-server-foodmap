@@ -1,0 +1,32 @@
+.container{
+    max-width: 800px;
+}
+.bs-callout-info {
+    border: 1px solid #eee;
+    border-left-width: 5px;
+    border-left-color: #5bc0de;
+}
+.bs-callout-danger {
+    border: 1px solid #eee;
+    border-left-width: 5px;
+    border-left-color: #d9534f;
+}
+.bs-callout {
+    padding: 10px;
+    margin: 20px 0;
+    border-radius: 3px;
+}
+.error-hint {
+    color: #d9534f;
+    display: none;
+}
+
+#console{
+    background-color: #272727;
+    padding: 5px;
+    color: #fff;
+}
+
+#console p{
+    margin: 0;
+}

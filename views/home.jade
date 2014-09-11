@@ -1,0 +1,37 @@
+extends layout
+block content
+  .container
+    .page-header
+      h1
+        a(href="/") 海外站
+        a.btn.btn-primary(href="/create",style="margin-left:10px",type="button")
+          | 添加
+          .glyphicon.glyphicon-plus(style="margin-left:10px")
+        if isHome
+          a.btn.btn-primary(href="/trash",style="float:right")
+            | 回收站
+            .glyphicon.glyphicon-trash(style="margin-left:10px;")
+    div.cities.row
+      each city in cities
+        .col-xs-6.col-md3
+          .thumbnail
+            .caption
+              h3
+                if isHome
+                  a(href="/preview/#{city.cityEnName}/foodmap/",target="_blank") #{city.cityName}
+                    img(src="#{city.thumbnail}")
+                    a.btn.btn-primary(href="/remove/#{city.cityEnName}",style="margin-left:10px",type="button")
+                      | 删除
+                      .glyphicon.glyphicon-trash(style="margin-left:10px")
+                    a.btn.btn-primary(href="/download/#{city.cityEnName}",style="margin-left:10px",type="button")
+                      | 下载
+                      .glyphicon.glyphicon-download(style="margin-left:10px")
+                else
+                  a(href="javascript:;",style="cursor:default;text-decoration:none") #{city.cityName}
+                    img(src="#{city.thumbnail}")
+                    a.btn.btn-primary(href="/reset/#{city.cityEnName}",style="margin-left:10px",type="button")
+                      | 恢复
+                      .glyphicon.glyphicon-pancel(style="margin-left:10px")
+                    a.btn.btn-primary(href="/destory/#{city.cityEnName}",style="margin-left:10px",type="button")
+                      | 永久删除
+                      .glyphicon.glyphicon-trash(style="margin-left:10px")

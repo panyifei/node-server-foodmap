@@ -1,0 +1,62 @@
+extends layout
+
+block style
+  link(href="/css/creator.css",rel="stylesheet")
+
+mixin input(name,text,sample,required)
+  .form-group
+    label 输入#{text}
+    input.form-control(type='text',required=required,name='#{name}', placeholder='#{name}')
+    p.help-block Example :'#{sample}'
+
+mixin fileinput(name,title,multiple,disabled)
+  .form-group
+    label 上传#{title}
+    input.form-control(id="#{name}",required,disabled=disabled,type='file',multiple=multiple,name='#{name}', placeholder='#{name}')
+    block
+
+block content
+  .container
+    .panel.panel-default.bs-callout-info.bs-callout
+      h3.text-muted 创建新地图！
+    #addMetaDiv.panel.panel-default.bs-callout-danger.bs-callout
+      .panel-collapse.collapse.in
+        form.nosubmitform(role='form', action='', method='post')
+          +input("cityId","city id","2335",true)
+          +input("cityName","城市中文名","台北",true)
+          +input("cityEnName","城市英文名","taipei",true)
+          +input("title","标题","台北美食地图 - 台湾美食地图",true)
+          +input("pdf","pdf链接","http://www.dianping.com/taipei/foodmap/taipei_foodmap.pdf",true)
+          +input("thumbnail","微信分享缩略图","http://j3.s2.dpfile.com/pc/014255c44e4c1fc296217d76c1043aea&#40;120c120&#41;/thumb.jpg",true)
+          //- +input("shareDesc","微信分享描述（可选）","到了台湾吃什么？听点评怎么说！台湾美食地图来了")
+          //- +input("priceConvert","价格转换规则（可选）", "￥#{price}")
+          +fileinput("csv","城市csv数据文件",false)
+            .citylist
+            .error-hint
+          +fileinput("banner","城市banner图",false)
+            .pic
+            .error-hint
+          +fileinput("pics","城市景点封面",true,true)
+            .pics
+            .error-hint
+          +fileinput("maps","城市景点地图",true,true)
+            .pics
+            .error-hint
+          .buttons
+            input#submit.btn.btn-primary(type="submit",value="提交")
+  .modal.fade#console-modal
+    .modal-dialog
+      .modal-content
+        .modal-header
+          button.close(type='button', data-dismiss='modal')
+            span(aria-hidden='true') ×
+            span.sr-only Close
+          h4.modal-title 生成中
+        .modal-body
+          p#console
+        .modal-footer
+          button.btn.btn-default(type='button', data-dismiss='modal') Close
+          button.btn.btn-primary(type='button') Save changes
+
+block script
+  script(src="/js/creator.js")

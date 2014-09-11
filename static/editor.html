@@ -1,0 +1,176 @@
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>美食地图生成工具</title>
+    <link href="./css/bootstrap.min.css" rel="stylesheet">
+    <link href="./css/myCss.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="container">
+          
+        <div class="panel panel-default bs-callout-info bs-callout">
+              <h3 class="text-muted">美食地图生成工具</h3>
+        </div>
+        
+        <div id="addMetaDiv" class="panel panel-default bs-callout-danger bs-callout">
+
+            <div>
+              <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#addMetaCollapse" class="">
+                  <h2>填写city信息</h2>
+                </a>
+              </h4>
+            </div>
+
+            <div id="addMetaCollapse" class="panel-collapse collapse in ">
+                <hr/>
+                <form role="form" action="" method="post" class="nosubmitform">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">输入city id</label>
+                    <input type="text" class="form-control" name="cityid" placeholder="cityid">
+                    <p class="help-block">Example :'   2335   '</p>
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">输入city name(中文加拼音)</label>
+                    <input type="text" class="form-control" name="cityname" placeholder="city name">
+                    <p class="help-block">Example :'   台北;taibei   '</p>
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleInputPassword1">输入title</label>
+                    <input type="text" class="form-control" name="title" placeholder="title">
+                    <p class="help-block">Example :'  台北美食地图 - 台湾美食地图   '</p>
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleInputFile">输入pdf链接</label>
+                    <input type="text" class="form-control" name="pdfLink" placeholder="pdf链接">
+                    <p class="help-block">Example :'  http://www.dianping.com/taipei/foodmap/taipei_foodmap.pdf  '</p>
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleInputFile">输入thumbnail</label>
+                    <input type="text" class="form-control" name="thumbnail" placeholder="thumbnail">
+                    <p class="help-block">Example :'  http://j3.s2.dpfile.com/pc/014255c44e4c1fc296217d76c1043aea(120c120)/thumb.jpg  '</p>
+                  </div>
+
+
+                  <div id="addMetaChooseDiv" class="panel panel-default bs-callout-info bs-callout">
+
+                          <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#addMetaChooseCollapse" class="">
+                              <h4>以下信息选择填写</h4>
+                            </a>
+                          </h4>
+
+                        <div id="addMetaChooseCollapse" class="panel-collapse collapse">
+                            <hr/>
+                            <div class="form-group">
+                              <label for="exampleInputFile">输入shareDesc</label>
+                              <input type="text" class="form-control" name="shareDesc" placeholder="shareDesc">
+                              <p class="help-block">Example :'  到了台湾吃什么？听点评怎么说！台湾美食地图来了 '</p>
+                            </div>
+                            <div class="form-group">
+                              <label for="exampleInputFile">输入priceConvert</label>
+                              <input type="text" class="form-control" name="priceConvert" placeholder="priceConvert">
+                              <p class="help-block">Example :'  "￥"+ price + "/NT$" + Math.round(price*4.8839)  '</p>
+                            </div>
+                        </div>
+                  </div>
+
+
+                  <button id="addMeta" class="btn btn-default">生成meta.js</button>
+                </form>
+            </div>
+
+      </div>
+
+      <div id="uploadCsvDiv" class="panel panel-default bs-callout-danger bs-callout">
+
+            <div>
+              <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#uploadCsvCollapse" class="">
+                  <h2>上传景点信息(CSV文件)</h2>
+                </a>
+              </h4>
+            </div>
+
+            <div id="uploadCsvCollapse" class="panel-collapse collapse">
+                <hr/>
+                <form role="form" action="" method="post" class="nosubmitform">
+                  <div id="csvBox">景点信息(CSV文件)</div>
+                  <input id="csvMultiple" type="file" multiple>
+                </form>
+                <h4 id="showCsvStatus"></h4>
+            </div>
+      </div>
+
+      <div id="uploadPicDiv" class="panel panel-default bs-callout-danger bs-callout">
+
+            <div>
+              <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#uploadPicCollapse" class="">
+                  <h2>上传图片文件</h2>
+                </a>
+              </h4>
+            </div>
+
+            <div id="uploadPicCollapse" class="panel-collapse collapse">
+                <hr/>
+                <form role="form" action="" method="post" class="nosubmitform">
+                  <div id="bannerBox">Banner图片</div>
+                  <input id="bannerMultiple" type="file" multiple>
+                  <div id="previewBannerDiv"></div>
+                </form>
+                <hr/>
+                <h4 id="showSiteNames"></h4>
+                <hr/>
+                <form role="form" action="" method="post" class="nosubmitform">
+                  <div id="picturesBox">商家图片(拖拽即可)</div>
+                  <input id="picturesMultiple" type="file" multiple>
+                  <button id="rePicturesUpload" class="btn btn-default">重传pictures和map</button>
+                  <div id="previewPicturesDiv"></div>
+                </form>
+                <hr/>
+                <form role="form" action="" method="post" class="nosubmitform">
+                  <div id="mapPicBox">map图片(拖拽即可)</div>
+                  <input id="mapPicMultiple" type="file" multiple>
+                  <button id="reMapPicUpload" class="btn btn-default">重新上传map</button>
+                  <div id="previewMapDiv"></div>
+                </form>
+                <hr/>
+                <button id="uploadPicDoneBtn" class="btn btn-default">上传完毕</button>
+            </div>
+      </div>
+
+
+      <div id="finalBuildDiv" class="panel panel-default bs-callout-danger bs-callout">
+
+            <div>
+              <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#finalBuildCollapse" class="">
+                  <h2>地图文件生成中</h2>
+                </a>
+              </h4>
+            </div>
+
+            <div id="finalBuildCollapse" class="panel-collapse collapse">
+                <hr/>
+                <h3 id="mapBuildStatus"></h3>
+                <form role="form" action="" method="post" class="nosubmitform">
+                  <a  target="_blank" id="showFoodmapA" class="btn btn-default" disabled='disabled'>预览</a>
+                  <button  id="downloadFoodmapBtn" class="btn btn-default" disabled='disabled'>下载</button>
+                </form>
+            </div>
+      </div>
+
+
+      <div class="footer">
+        <p>© Company 2014</p>
+      </div>
+    </div> <!-- /container -->
+    <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+    <script src="./js/jquery.html5uploader.min.js"></script>
+    <script src="http://cdn.bootcss.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="./js/ajaxHelper.js"></script>
+</body>
+</html>
